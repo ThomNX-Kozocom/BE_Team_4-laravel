@@ -8,7 +8,7 @@ orbs:
     aws-cli: circleci/aws-cli@0.1.13
 
 jobs:
-  checkout:
+    checkout:
         docker:
             - image: circleci/python:3-stretch-browsers
         steps:
@@ -18,7 +18,7 @@ jobs:
                   root: ~/team_4
                   paths:
                       - .
-  push_image_enudge:
+    push_image_enudge:
         docker:
             - image: circleci/node:10
         working_directory: ~/team_4
@@ -27,6 +27,12 @@ jobs:
                   at: ~/team_4
             - setup_remote_docker:
                   docker_layer_caching: false
+            - run:
+                  name: edit file for aws
+                  command: |
+                      cat \<<EOF > .env
+                        APP_KEY=base64:iEw2hOwRbMldN0lMhtg0g7klkcOlUSeAMZ2Tk4gUAys=
+                      EOF
             - aws-ecr/build-and-push-image:
                   checkout: false
                   repo: "enudge-app"
@@ -36,6 +42,27 @@ jobs:
                   aws-access-key-id: AWS_ACCESS_KEY_ID
                   aws-secret-access-key: AWS_SECRET_ACCESS_KEY
                   region: AWS_DEFAULT_REGION
+    deploy:
+        docker:
+            - image: circleci/python:3.6
+        working_directory: ~/team_4/.circleci/task-definitions
+        steps:
+            - aws-cli/install
+            - attach_workspace:
+                  at: ~/team_4
+            - run:
+                  name: Load Task Definition File
+                  command: |
+                      jsons=(app-task-definition.json) && \
+                      for json in ${jsons[@]}; do
+                          printf "cat \<<EOF\n`cat $json`\nEOF\n" | sh > "ci-$json"
+                      done
+            - run:
+                  name: Register new app task definition
+                  command: aws ecs register-task-definition --family dev-enudge-test --cli-input-json file://ci-app-task-definition.json --region us-west-2
+            - run:
+                  name: Update app service
+                  command: aws ecs update-service --cluster dev-enudge-test --service app --desired-count 2 --task-definition dev-enudge-test --region us-west-2
 
 
 # Orchestrate jobs using workflows
