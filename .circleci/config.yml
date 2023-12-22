@@ -32,10 +32,10 @@ jobs:
                   repo: "enudge-app"
                   dockerfile: Dockerfile
                   tag: ${CIRCLE_SHA1}
-                  account-url: AWS_ECR_ACCOUNT_URL
-                  aws-access-key-id: AWS_ACCESS_KEY_ID
-                  aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-                  region: AWS_DEFAULT_REGION
+                  account-url: ${AWS_ECR_ACCOUNT_URL}
+                  aws-access-key-id: ${AWS_ACCESS_KEY_ID}
+                  aws-secret-access-key: ${AWS_SECRET_ACCESS_KEY}
+                  region: ${AWS_DEFAULT_REGION}
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
