@@ -27,19 +27,6 @@ jobs:
                   at: ~/team_4
             - setup_remote_docker:
                   docker_layer_caching: false
-            - run:
-                name: edit Dockerfile.prod
-                command: |
-                    cat \<<EOF > Dockerfile.prod
-                        FROM ${ENUDGE_APP_ORIGIN_REPO}:latest
-                        COPY ./php.ini /usr/local/etc/php/conf.d
-                        WORKDIR /home/webservice/mietaro
-                        COPY . /home/webservice/mietaro
-                        RUN chmod 777 -R storage
-                        RUN chmod 777 -R bootstrap/cache
-                        RUN a2enmod rewrite
-                        RUN composer install
-                    EOF
             - aws-ecr/build-and-push-image:
                   checkout: false
                   repo: "enudge-app"
