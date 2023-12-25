@@ -42,27 +42,9 @@ jobs:
                   aws-access-key-id: AWS_ACCESS_KEY_ID
                   aws-secret-access-key: AWS_SECRET_ACCESS_KEY
                   region: AWS_DEFAULT_REGION
-    deploy:
-        docker:
-            - image: circleci/python:3.6
-        working_directory: ~/team_4/.circleci/task-definitions
-        steps:
-            - aws-cli/install
-            - attach_workspace:
-                  at: ~/team_4
-            - run:
-                  name: Load Task Definition File
-                  command: |
-                      jsons=(app-task-definition.json) && \
-                      for json in ${jsons[@]}; do
-                          printf "cat \<<EOF\n`cat $json`\nEOF\n" | sh > "ci-$json"
-                      done
-            - run:
-                  name: Register new app task definition
-                  command: aws ecs register-task-definition --family dev-enudge-test --cli-input-json file://ci-app-task-definition.json --region us-west-2
-            - run:
-                  name: Update app service
-                  command: aws ecs update-service --cluster dev-enudge-test --service app --desired-count 2 --task-definition dev-enudge-test --region us-west-2
+                  extra_build_args: "--build-arg AUTH_BASIC_USERNAME=${AUTH_BASIC_USERNAME} AUTH_BASIC_PASSWORD=${AUTH_BASIC_PASSWORD} AUTH_BASIC_ENABLE=true"
+
+                  
 
 
 # Orchestrate jobs using workflows
