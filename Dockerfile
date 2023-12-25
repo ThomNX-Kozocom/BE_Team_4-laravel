@@ -10,7 +10,7 @@ ARG AUTH_BASIC_ENABLE
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-RUN htpasswd -b -c /etc/apache2/.htpasswd ${AUTH_BASIC_USERNAME} ${AUTH_BASIC_PASSWORD}
+RUN htpasswd -b -c /etc/apache2/.htpasswd test test
 # RUN if [ ${AUTH_BASIC_ENABLE} = true ]; then htpasswd -b -c /etc/apache2/.htpasswd ${AUTH_BASIC_USERNAME} ${AUTH_BASIC_PASSWORD} ;fi
 
 COPY ./enudge.conf /etc/apache2/sites-available
