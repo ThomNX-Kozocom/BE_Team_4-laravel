@@ -4,14 +4,16 @@ COPY ./php.ini /usr/local/etc/php/conf.d
 
 ENV APACHE_DOCUMENT_ROOT /home/webservice/mietaro/public
 
-ARG AUTH_BASIC_USERNAME
-ARG AUTH_BASIC_PASSWORD
+ARG DEV_AUTH_BASIC_USERNAME
+ARG DEV_AUTH_BASIC_PASSWORD
+ARG STG_AUTH_BASIC_USERNAME
+ARG STG_AUTH_BASIC_PASSWORD
 ARG CIRCLE_BRANCH
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-# RUN htpasswd -b -c /etc/apache2/.htpasswd ${AUTH_BASIC_USERNAME} ${AUTH_BASIC_PASSWORD}
-RUN if [ ${CIRCLE_BRANCH} != main ]; then htpasswd -b -c /etc/apache2/.htpasswd ${AUTH_BASIC_USERNAME} ${AUTH_BASIC_PASSWORD} ;fi
+RUN if [ ${CIRCLE_BRANCH} = dev ]; then htpasswd -b -c /etc/apache2/.htpasswd ${DEV_AUTH_BASIC_USERNAME} ${DEV_AUTH_BASIC_PASSWORD} ;fi
+RUN if [ ${CIRCLE_BRANCH} = stg ]; then htpasswd -b -c /etc/apache2/.htpasswd ${STG_AUTH_BASIC_USERNAME} ${STG_AUTH_BASIC_PASSWORD} ;fi
 
 COPY ./enudge.conf /etc/apache2/sites-available
 RUN echo 'LogFormat "%{X-Forwarded-For}i %{X-Forwarded-Proto}i %h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined' >> /etc/apache2/apache2.conf
