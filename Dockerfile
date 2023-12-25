@@ -10,7 +10,8 @@ ARG AUTH_BASIC_ENABLE
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-RUN if [ ${AUTH_BASIC_ENABLE} = true ]; then htpasswd -b -c /etc/apache2/.htpasswd ${AUTH_BASIC_USERNAME} ${AUTH_BASIC_PASSWORD} ;fi
+RUN htpasswd -b -c /etc/apache2/.htpasswd ${AUTH_BASIC_USERNAME} ${AUTH_BASIC_PASSWORD}
+# RUN if [ ${AUTH_BASIC_ENABLE} = true ]; then htpasswd -b -c /etc/apache2/.htpasswd ${AUTH_BASIC_USERNAME} ${AUTH_BASIC_PASSWORD} ;fi
 
 COPY ./enudge.conf /etc/apache2/sites-available
 RUN echo 'LogFormat "%{X-Forwarded-For}i %{X-Forwarded-Proto}i %h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined' >> /etc/apache2/apache2.conf
