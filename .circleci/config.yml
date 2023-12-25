@@ -42,8 +42,11 @@ jobs:
                   aws-access-key-id: AWS_ACCESS_KEY_ID
                   aws-secret-access-key: AWS_SECRET_ACCESS_KEY
                   region: AWS_DEFAULT_REGION
-                  extra-build-args: --build-arg DEV_AUTH_BASIC_USERNAME=${DEV_AUTH_BASIC_USERNAME} --build-arg DEV_AUTH_BASIC_PASSWORD=${DEV_AUTH_BASIC_PASSWORD} --build-arg STG_AUTH_BASIC_USERNAME=${STG_AUTH_BASIC_USERNAME} --build-arg STG_AUTH_BASIC_PASSWORD=${STG_AUTH_BASIC_PASSWORD} --build-arg CIRCLE_BRANCH=${CIRCLE_BRANCH}
-                
+                  extra-build-args: --build-arg DEV_AUTH_BASIC_USERNAME=${DEV_AUTH_BASIC_USERNAME} \
+                    --build-arg DEV_AUTH_BASIC_PASSWORD=${DEV_AUTH_BASIC_PASSWORD} \ 
+                    --build-arg STG_AUTH_BASIC_USERNAME=${STG_AUTH_BASIC_USERNAME} \ 
+                    --build-arg STG_AUTH_BASIC_PASSWORD=${STG_AUTH_BASIC_PASSWORD} \
+                    --build-arg CIRCLE_BRANCH=${CIRCLE_BRANCH}                
                   
 
 
