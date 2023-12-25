@@ -68,18 +68,6 @@
                 {
                     "name": "DB_PASSWORD",
                     "value": ""
-                },
-                {
-                    "name": "AUTH_BASIC_ENABLE",
-                    "value": "true"
-                },
-                {
-                    "name": "AUTH_BASIC_USERNAME",
-                    "value": "$AUTH_BASIC_USERNAME"
-                },
-                {
-                    "name": "AUTH_BASIC_PASSWORD",
-                    "value": "$AUTH_BASIC_PASSWORD"
                 }
             ]
         }
