@@ -60,11 +60,11 @@ workflows:
         - push_image_enudge:
             requires:
                 - checkout
-        - deploy:
-                  requires:
-                      - push_image_enudge
-                  filters:
-                      branches:
-                          only:
-                              - main
+        # - deploy:
+        #           requires:
+        #               - push_image_enudge
+        #           filters:
+        #               branches:
+        #                   only:
+        #                       - main
 
