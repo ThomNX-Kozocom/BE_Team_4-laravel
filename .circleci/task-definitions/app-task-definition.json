@@ -1,7 +1,7 @@
 {
     "networkMode" : "awsvpc",
-    "cpu" : "256",
-    "memory" : "512",
+    "cpu" : "1024",
+    "memory" : "2048",
     "requiresCompatibilities": ["FARGATE"],
     "taskRoleArn" : "arn:aws:iam::122068508766:role/ecsDevTaskRole",
     "executionRoleArn" : "arn:aws:iam::122068508766:role/ecsDevTaskRole",
