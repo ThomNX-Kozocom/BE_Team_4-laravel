@@ -44,8 +44,27 @@ jobs:
                   region: AWS_DEFAULT_REGION
                   extra-build-args: --build-arg DEV_AUTH_BASIC_USERNAME=${DEV_AUTH_BASIC_USERNAME} --build-arg DEV_AUTH_BASIC_PASSWORD=${DEV_AUTH_BASIC_PASSWORD} --build-arg STG_AUTH_BASIC_USERNAME=${STG_AUTH_BASIC_USERNAME} --build-arg STG_AUTH_BASIC_PASSWORD=${STG_AUTH_BASIC_PASSWORD} --build-arg CIRCLE_BRANCH=${CIRCLE_BRANCH}
                 
-                  
-
+    deploy:
+        docker:
+            - image: circleci/python:3.6
+        working_directory: ~/team_4/.circleci/task-definitions
+        steps:
+            - aws-cli/install
+            - attach_workspace:
+                  at: ~/team_4
+            - run:
+                  name: Load Task Definition File
+                  command: |
+                      jsons=(app-task-definition.json migrate-task-definition.json) && \
+                      for json in ${jsons[@]}; do
+                          printf "cat \<<EOF\n`cat $json`\nEOF\n" | sh > "ci-$json"
+                      done
+            - run:
+                  name: Register new app task definition
+                  command: aws ecs register-task-definition --family dev-enudge-test2 --cli-input-json file://ci-app-task-definition.json --region ap-northeast-1
+            - run:
+                  name: Update app service
+                  command: aws ecs update-service --cluster dev-enudge-test2 --service app --desired-count 2 --task-definition dev-enudge-test2 --region ap-northeast-1
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
@@ -62,11 +81,11 @@ workflows:
         - push_image_enudge:
             requires:
                 - checkout
-        # - deploy:
-        #           requires:
-        #               - push_image_enudge
-        #           filters:
-        #               branches:
-        #                   only:
-        #                       - main
+        - deploy:
+                  requires:
+                      - push_image_enudge
+                  filters:
+                      branches:
+                          only:
+                              - dev
 
