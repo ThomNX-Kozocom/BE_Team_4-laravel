@@ -61,10 +61,10 @@ jobs:
                       done
             - run:
                   name: Register new app task definition
-                  command: aws ecs register-task-definition --family dev-enudge-test2 --cli-input-json file://ci-app-task-definition.json --region ap-northeast-1
+                  command: aws ecs register-task-definition --family dev-enudge-test2 --cli-input-json file://ci-app-task-definition.json --region us-west-2
             - run:
                   name: Update app service
-                  command: aws ecs update-service --cluster dev-enudge-test2 --service app --desired-count 2 --task-definition dev-enudge-test2 --region ap-northeast-1
+                  command: aws ecs update-service --cluster dev-enudge-test2 --service app --desired-count 2 --task-definition dev-enudge-test2 --region us-west-2
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
