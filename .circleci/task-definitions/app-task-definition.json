@@ -4,7 +4,7 @@
     "memory" : "512",
     "requiresCompatibilities": ["FARGATE"],
     "taskRoleArn" : "$ECS_DEV_TASK_ROLE",
-    "executionRoleArn" : "$ECS_TASK_EXECUTION_ROLE",
+    "executionRoleArn" : "$ECS_DEV_TASK_ROLE",
     "containerDefinitions":
     [
         {
