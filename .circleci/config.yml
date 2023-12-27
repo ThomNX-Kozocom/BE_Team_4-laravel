@@ -65,6 +65,13 @@ jobs:
             - run:
                   name: Update app service
                   command: aws ecs update-service --cluster dev-enudge-test2 --service app --desired-count 1 --task-definition dev-enudge-test2 --region us-west-2
+            - run:
+                 name: Get network configurations
+                 command: |
+                      SUBNETS=$(aws ecs describe-services --cluster dev-enudge-test2 --service app --region us-west-2 --query "services[0].networkConfiguration.awsvpcConfiguration.subnets" --output text | awk '{printf "%s,%s",$1,$2}')
+                      SECURITY_GROUPS=$(aws ecs describe-services --cluster dev-enudge-test2 --service app --region us-west-2 --query "services[0].networkConfiguration.awsvpcConfiguration.securityGroups" --output text)
+                      echo "export SUBNETS=$SUBNETS" >> $BASH_ENV
+                      echo "export SECURITY_GROUPS=$SECURITY_GROUPS" >> $BASH_ENV
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
